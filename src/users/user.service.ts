@@ -21,7 +21,9 @@ export class UserService {
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    return user;
+    const userResponse = { ...user };
+    delete userResponse.password;
+    return userResponse;
   }
 
   createUser(dto: CreateUserDTO) {
@@ -33,7 +35,9 @@ export class UserService {
       updatedAt: Date.now(),
     };
     this.users.push(user);
-    return user;
+    const userResponse = { ...user };
+    delete userResponse.password;
+    return userResponse;
   }
 
   updateUserById(id: string, dto: UpdateUserDTO) {
@@ -50,7 +54,9 @@ export class UserService {
     this.users = this.users.map((user) =>
       user.id === id ? updatedUser : user,
     );
-    return updatedUser;
+    const userResponse = { ...updatedUser };
+    delete userResponse.password;
+    return userResponse;
   }
 
   deleteUserById(id: string) {
