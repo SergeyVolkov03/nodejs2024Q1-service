@@ -49,4 +49,8 @@ export class TrackService {
     this.getTrackById(id);
     this.tracks = this.tracks.filter((track) => track.id !== id);
   }
+
+  getTracksByIds(ids: string[]) {
+    return this.tracks.filter((track) => ids.includes(track.id));
+  }
 }

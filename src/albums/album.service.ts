@@ -47,4 +47,8 @@ export class AlbumService {
     this.getAlbumById(id);
     this.albums = this.albums.filter((album) => album.id !== id);
   }
+
+  getAlbumsByIds(ids: string[]) {
+    return this.albums.filter((album) => ids.includes(album.id));
+  }
 }

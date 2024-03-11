@@ -45,4 +45,8 @@ export class ArtistService {
     this.getArtistById(id);
     this.artists = this.artists.filter((artist) => artist.id !== id);
   }
+
+  getArtistsByIds(ids: string[]) {
+    return this.artists.filter((artist) => ids.includes(artist.id));
+  }
 }
