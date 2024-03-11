@@ -1,6 +1,5 @@
 import {
   IsBoolean,
-  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
@@ -8,15 +7,15 @@ import {
 } from 'class-validator';
 
 export class UpdateAlbumDTO {
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   name: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsBoolean()
   grammy: boolean;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   year: number;
 
