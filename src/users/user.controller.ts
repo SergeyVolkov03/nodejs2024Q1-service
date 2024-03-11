@@ -24,12 +24,12 @@ export class UserController {
   }
 
   @Get(':id')
-  getUser(@Param() param: UuidValidate): User {
+  getUser(@Param() param: UuidValidate) {
     return this.userService.getUserById(param.id);
   }
 
   @Post()
-  createUser(@Body() user: CreateUserDTO): User {
+  createUser(@Body() user: CreateUserDTO) {
     return this.userService.createUser(user);
   }
 

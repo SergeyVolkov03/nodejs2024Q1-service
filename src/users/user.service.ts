@@ -16,6 +16,14 @@ export class UserService {
     return this.users;
   }
 
+  getUserById(id: string) {
+    const user = this.users.find((user) => user.id === id);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
+  }
+
   createUser(dto: CreateUserDTO) {
     const user = {
       ...dto,
@@ -29,10 +37,7 @@ export class UserService {
   }
 
   updateUserById(id: string, dto: UpdateUserDTO) {
-    const user = this.users.find((user) => user.id === id);
-    if (!user) {
-      throw new NotFoundException('User not Found');
-    }
+    const user = this.getUserById(id);
     if (dto.oldPassword !== user.password) {
       throw new ForbiddenException('Password is not correct');
     }
@@ -45,24 +50,11 @@ export class UserService {
     this.users = this.users.map((user) =>
       user.id === id ? updatedUser : user,
     );
-    const response = { ...updatedUser };
-    delete response.password;
     return updatedUser;
   }
 
-  getUserById(id: string) {
-    const user = this.users.find((user) => user.id === id);
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-    return user;
-  }
-
   deleteUserById(id: string) {
-    const user = this.users.find((user) => user.id === id);
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
+    this.getUserById(id);
     this.users = this.users.filter((user) => user.id !== id);
   }
 }
