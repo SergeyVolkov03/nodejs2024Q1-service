@@ -6,9 +6,17 @@ import { ArtistModule } from './artists/artist.module';
 import { AlbumModule } from './albums/album.module';
 import { TrackModule } from './tracks/track.module';
 import { FavoriteModule } from './favorites/favorite.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [UserModule, ArtistModule, AlbumModule, TrackModule, FavoriteModule],
+  imports: [
+    UserModule,
+    ArtistModule,
+    AlbumModule,
+    TrackModule,
+    FavoriteModule,
+    ConfigModule.forRoot({ isGlobal: true, envFilePath: '../.env' }),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
