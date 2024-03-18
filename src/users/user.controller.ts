@@ -9,7 +9,6 @@ import {
   Put,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { User } from './types/user.type';
 import { UuidValidate } from 'src/utilities/uuid';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
@@ -19,7 +18,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  getUsers(): User[] {
+  getUsers() {
     return this.userService.getUsers();
   }
 

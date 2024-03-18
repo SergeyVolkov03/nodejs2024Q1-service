@@ -4,63 +4,67 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { User } from './types/user.type';
 import { v4 } from 'uuid';
 import { UpdateUserDTO } from './dto/update-user.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
-  users: User[] = [];
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
 
-  getUsers() {
-    return this.users;
+  async getUsers() {
+    return await this.userRepository.find();
   }
 
-  getUserById(id: string) {
-    const user = this.users.find((user) => user.id === id);
+  async getUserById(id: string) {
+    const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    const userResponse = { ...user };
-    delete userResponse.password;
-    return userResponse;
+    return user;
   }
 
-  createUser(dto: CreateUserDTO) {
-    const user = {
+  async createUser(dto: CreateUserDTO) {
+    const createdAt = String(Date.now());
+    const newUser = {
       ...dto,
       id: v4(),
       version: 1,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
+      createdAt: Number(createdAt.slice(createdAt.length - 5)),
+      updatedAt: Number(createdAt.slice(createdAt.length - 5)),
     };
-    this.users.push(user);
-    const userResponse = { ...user };
-    delete userResponse.password;
-    return userResponse;
+    const createdUser = this.userRepository.create(newUser);
+    await this.userRepository.save(createdUser);
+    const user = { ...createdUser };
+    delete user.password;
+    return user;
   }
 
-  updateUserById(id: string, dto: UpdateUserDTO) {
-    const user = this.getUserById(id);
+  async updateUserById(id: string, dto: UpdateUserDTO) {
+    const user = await this.getUserById(id);
     if (dto.oldPassword !== user.password) {
       throw new ForbiddenException('Password is not correct');
     }
+    const updatedAt = String(Date.now());
     const updatedUser = {
       ...user,
       password: dto.newPassword,
       version: user.version + 1,
-      updatedAt: Date.now(),
+      updatedAt: Number(updatedAt.slice(updatedAt.length - 5)),
     };
-    this.users = this.users.map((user) =>
-      user.id === id ? updatedUser : user,
-    );
+    await this.userRepository.save(updatedUser);
     const userResponse = { ...updatedUser };
     delete userResponse.password;
     return userResponse;
   }
 
-  deleteUserById(id: string) {
-    this.getUserById(id);
-    this.users = this.users.filter((user) => user.id !== id);
+  async deleteUserById(id: string) {
+    await this.getUserById(id);
+    await this.userRepository.delete(id);
   }
 }
