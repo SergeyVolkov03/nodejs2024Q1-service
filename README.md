@@ -17,6 +17,12 @@ git clone {repository URL}
 npm install
 ```
 
+## Running migrations
+
+```
+npm run tables:create
+```
+
 ## Running application
 
 ```
