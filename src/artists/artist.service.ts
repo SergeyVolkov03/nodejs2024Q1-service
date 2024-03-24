@@ -1,52 +1,49 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Artist } from './types/artist.type';
 import { CreateArtistDTO } from './dto/create-artist-dto';
 import { v4 } from 'uuid';
 import { UpdateArtistDTO } from './dto/update-artist-dto';
+import { Artist } from './entities/artist.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ArtistService {
-  artists: Artist[] = [];
+  constructor(
+    @InjectRepository(Artist)
+    private readonly artistRepository: Repository<Artist>,
+  ) {}
 
-  getArtists() {
-    return this.artists;
+  async getArtists() {
+    return await this.artistRepository.find();
   }
 
-  createArtist(dto: CreateArtistDTO) {
-    const artist = {
-      ...dto,
-      id: v4(),
-    };
-    this.artists.push(artist);
-    return artist;
-  }
-
-  getArtistById(id: string) {
-    const artist = this.artists.find((artist) => artist.id === id);
+  async getArtistById(id: string) {
+    const artist = await this.artistRepository.findOne({ where: { id } });
     if (!artist) {
       throw new NotFoundException('Artist not found');
     }
     return artist;
   }
 
-  updateArtistById(id: string, dto: UpdateArtistDTO) {
-    const artist = this.getArtistById(id);
+  async createArtist(dto: CreateArtistDTO) {
+    const artist = {
+      ...dto,
+      id: v4(),
+    };
+    return await this.artistRepository.save(artist);
+  }
+
+  async updateArtistById(id: string, dto: UpdateArtistDTO) {
+    const artist = await this.getArtistById(id);
     const updatedArtist = {
       ...artist,
       ...dto,
     };
-    this.artists = this.artists.map((artist) =>
-      artist.id === id ? updatedArtist : artist,
-    );
-    return updatedArtist;
+    return await this.artistRepository.save(updatedArtist);
   }
 
-  deleteArtistById(id: string) {
-    this.getArtistById(id);
-    this.artists = this.artists.filter((artist) => artist.id !== id);
-  }
-
-  getArtistsByIds(ids: string[]) {
-    return this.artists.filter((artist) => ids.includes(artist.id));
+  async deleteArtistById(id: string) {
+    await this.getArtistById(id);
+    await this.artistRepository.delete(id);
   }
 }

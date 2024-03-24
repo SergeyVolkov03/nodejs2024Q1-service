@@ -37,9 +37,8 @@ export class UserService {
       createdAt: Date.now(),
       updatedAt: Date.now(),
     };
-    const createdUser = this.userRepository.create(newUser);
-    await this.userRepository.save(createdUser);
-    const user = { ...createdUser };
+    await this.userRepository.save(newUser);
+    const user = { ...newUser };
     delete user.password;
     return user;
   }

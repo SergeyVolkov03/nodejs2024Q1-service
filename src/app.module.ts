@@ -3,9 +3,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './users/user.module';
 import { ArtistModule } from './artists/artist.module';
-import { AlbumModule } from './albums/album.module';
-import { TrackModule } from './tracks/track.module';
-import { FavoriteModule } from './favorites/favorite.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -13,9 +10,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   imports: [
     UserModule,
     ArtistModule,
-    AlbumModule,
-    TrackModule,
-    FavoriteModule,
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '../.env' }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
