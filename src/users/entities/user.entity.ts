@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
-@Entity('users')
+@Entity('user')
 export class User {
   @PrimaryColumn()
   id: string;
@@ -14,9 +14,9 @@ export class User {
   @Column()
   version: number;
 
-  @Column()
+  @Column('bigint')
   createdAt: number;
 
-  @Column()
+  @Column('bigint')
   updatedAt: number;
 }

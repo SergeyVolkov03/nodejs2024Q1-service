@@ -30,13 +30,12 @@ export class UserService {
   }
 
   async createUser(dto: CreateUserDTO) {
-    const createdAt = String(Date.now());
     const newUser = {
       ...dto,
       id: v4(),
       version: 1,
-      createdAt: Number(createdAt.slice(createdAt.length - 5)),
-      updatedAt: Number(createdAt.slice(createdAt.length - 5)),
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
     };
     const createdUser = this.userRepository.create(newUser);
     await this.userRepository.save(createdUser);
@@ -50,12 +49,11 @@ export class UserService {
     if (dto.oldPassword !== user.password) {
       throw new ForbiddenException('Password is not correct');
     }
-    const updatedAt = String(Date.now());
     const updatedUser = {
       ...user,
       password: dto.newPassword,
       version: user.version + 1,
-      updatedAt: Number(updatedAt.slice(updatedAt.length - 5)),
+      updatedAt: Date.now(),
     };
     await this.userRepository.save(updatedUser);
     const userResponse = { ...updatedUser };
