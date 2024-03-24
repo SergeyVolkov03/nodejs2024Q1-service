@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Album } from 'src/albums/entities/album.entity';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 
 @Entity('artist')
 export class Artist {
@@ -10,4 +11,7 @@ export class Artist {
 
   @Column()
   grammy: boolean;
+
+  @OneToMany(() => Album, (album) => album.artistId)
+  albums: Album[];
 }

@@ -1,54 +1,51 @@
-// import { Injectable, NotFoundException } from '@nestjs/common';
-// import { v4 } from 'uuid';
-// import { CreateAlbumDTO } from './dto/create-album-dto';
-// import { Album } from './types/album.type';
-// import { UpdateAlbumDTO } from './dto/update-album-dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { v4 } from 'uuid';
+import { CreateAlbumDTO } from './dto/create-album-dto';
+import { UpdateAlbumDTO } from './dto/update-album-dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Album } from './entities/album.entity';
+import { Repository } from 'typeorm';
 
-// @Injectable()
-// export class AlbumService {
-//   albums: Album[] = [];
+@Injectable()
+export class AlbumService {
+  constructor(
+    @InjectRepository(Album)
+    private readonly albumRepository: Repository<Album>,
+  ) {}
 
-//   getAlbums() {
-//     return this.albums;
-//   }
+  async getAlbums() {
+    return await this.albumRepository.find();
+  }
 
-//   createAlbum(dto: CreateAlbumDTO) {
-//     const artistId = dto.artistId ? dto.artistId : null;
-//     const album = {
-//       artistId: artistId,
-//       ...dto,
-//       id: v4(),
-//     };
-//     this.albums.push(album);
-//     return album;
-//   }
+  async getAlbumById(id: string) {
+    const album = await this.albumRepository.findOne({ where: { id } });
+    if (!album) {
+      throw new NotFoundException('Album not found');
+    }
+    return album;
+  }
 
-//   getAlbumById(id: string) {
-//     const album = this.albums.find((album) => album.id === id);
-//     if (!album) {
-//       throw new NotFoundException('Album not found');
-//     }
-//     return album;
-//   }
+  async createAlbum(dto: CreateAlbumDTO) {
+    const artistId = dto.artistId ? dto.artistId : null;
+    const album = {
+      artistId: artistId,
+      ...dto,
+      id: v4(),
+    };
+    return await this.albumRepository.save(album);
+  }
 
-//   updateAlbumById(id: string, dto: UpdateAlbumDTO) {
-//     const album = this.getAlbumById(id);
-//     const updatedAlbum = {
-//       ...album,
-//       ...dto,
-//     };
-//     this.albums = this.albums.map((album) =>
-//       album.id === id ? updatedAlbum : album,
-//     );
-//     return updatedAlbum;
-//   }
+  async updateAlbumById(id: string, dto: UpdateAlbumDTO) {
+    const album = await this.getAlbumById(id);
+    const updatedAlbum = {
+      ...album,
+      ...dto,
+    };
+    return await this.albumRepository.save(updatedAlbum);
+  }
 
-//   deleteAlbumById(id: string) {
-//     this.getAlbumById(id);
-//     this.albums = this.albums.filter((album) => album.id !== id);
-//   }
-
-//   getAlbumsByIds(ids: string[]) {
-//     return this.albums.filter((album) => ids.includes(album.id));
-//   }
-// }
+  async deleteAlbumById(id: string) {
+    await this.getAlbumById(id);
+    await this.albumRepository.delete(id);
+  }
+}

@@ -5,11 +5,13 @@ import { UserModule } from './users/user.module';
 import { ArtistModule } from './artists/artist.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AlbumModule } from './albums/album.module';
 
 @Module({
   imports: [
     UserModule,
     ArtistModule,
+    AlbumModule,
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '../.env' }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
