@@ -1,5 +1,6 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Delete, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { FavoriteService } from './favorite.service';
+import { UuidValidate } from 'src/utilities/uuid';
 
 @Controller('favs')
 export class FavoriteController {
@@ -10,36 +11,36 @@ export class FavoriteController {
     return this.favoriteService.getAllFavorites();
   }
 
-  //   @Post('/artist/:id')
-  //   addArtistToFavorites(@Param() paramUuid: UuidValidate) {
-  //     return this.favoriteService.addArtistToFavorites(paramUuid.id);
-  //   }
+  @Post('/artist/:id')
+  addArtistToFavorites(@Param() paramUuid: UuidValidate) {
+    return this.favoriteService.addArtistToFavorites(paramUuid.id);
+  }
 
-  //   @Post('/album/:id')
-  //   addAlbumToFavorites(@Param() paramUuid: UuidValidate) {
-  //     return this.favoriteService.addAlbumToFavorites(paramUuid.id);
-  //   }
+  @Delete('/artist/:id')
+  @HttpCode(204)
+  deleteArtistFromFavorites(@Param() paramUuid: UuidValidate) {
+    this.favoriteService.deleteArtistFromFavorites(paramUuid.id);
+  }
 
-  //   @Post('/track/:id')
-  //   addTrackToFavorites(@Param() paramUuid: UuidValidate) {
-  //     return this.favoriteService.addTrackToFavorites(paramUuid.id);
-  //   }
+  @Post('/album/:id')
+  addAlbumToFavorites(@Param() paramUuid: UuidValidate) {
+    return this.favoriteService.addAlbumToFavorites(paramUuid.id);
+  }
 
-  //   @Delete('/artist/:id')
-  //   @HttpCode(204)
-  //   deleteArtistFromFavorites(@Param() paramUuid: UuidValidate) {
-  //     this.favoriteService.deleteArtistFromFavorites(paramUuid.id);
-  //   }
+  @Delete('/album/:id')
+  @HttpCode(204)
+  deleteAlbumFromFavorites(@Param() paramUuid: UuidValidate) {
+    this.favoriteService.deleteAlbumFromFavorites(paramUuid.id);
+  }
 
-  //   @Delete('/album/:id')
-  //   @HttpCode(204)
-  //   deleteAlbumFromFavorites(@Param() paramUuid: UuidValidate) {
-  //     this.favoriteService.deleteAlbumFromFavorites(paramUuid.id);
-  //   }
+  @Post('/track/:id')
+  addTrackToFavorites(@Param() paramUuid: UuidValidate) {
+    return this.favoriteService.addTrackToFavorites(paramUuid.id);
+  }
 
-  //   @Delete('/artist/:id')
-  //   @HttpCode(204)
-  //   deleteTrackFromFavorites(@Param() paramUuid: UuidValidate) {
-  //     this.favoriteService.deleteTrackFromFavorites(paramUuid.id);
-  //   }
+  @Delete('/track/:id')
+  @HttpCode(204)
+  deleteTrackFromFavorites(@Param() paramUuid: UuidValidate) {
+    this.favoriteService.deleteTrackFromFavorites(paramUuid.id);
+  }
 }

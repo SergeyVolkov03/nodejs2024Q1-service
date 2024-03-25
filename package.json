@@ -20,8 +20,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "typeorm": "ts-node node_modules/typeorm/cli.js -d dist/migration.config.js",
-    "tables:generate": "npm run typeorm migration:generate db/migrations",
+    "typeorm": "ts-node node_modules/typeorm/cli.js -d src/migration.config.ts",
+    "tables:generate": "npm run typeorm migration:generate src/db/migrations/init",
     "tables:revert": "npm run typeorm migration:revert",
     "tables:create": "npm run typeorm migration:run"
   },

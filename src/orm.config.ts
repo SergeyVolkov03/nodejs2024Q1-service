@@ -1,5 +1,5 @@
-import 'dotenv/config';
 import { join } from 'path';
+import 'dotenv/config';
 import { DataSourceOptions } from 'typeorm';
 
 const {
@@ -17,8 +17,8 @@ export const config = {
   username: POSTGRES_USER,
   password: POSTGRESS_PASSWORD,
   database: POSTGRES_DB,
-  entities: [__dirname + '/**/*.entity{.ts,.js}'],
-  migrations: [join(__dirname, './db/migrations/', '*.js')],
+  entities: [join(__dirname, '/**/*.entity{.ts,.js}')],
+  migrations: [join(__dirname, './db/migrations/*.ts')],
   synchronize: false,
   autoLoadEntities: true,
 } as DataSourceOptions;
